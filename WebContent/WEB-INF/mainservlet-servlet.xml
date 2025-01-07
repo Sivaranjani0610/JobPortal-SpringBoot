@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+   http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/mvc
+   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+ <mvc:resources mapping="/resources/**" location="/resources/" ></mvc:resources>
+   <context:component-scan base-package="job.portal" />
+  <context:annotation-config /> 
+ <mvc:annotation-driven />
+  <bean id="dao" class="job.portal.dao.JobDao" />
+  <bean id="pdfService" class="job.portal.service.PDFService" />
+   <bean id="pdffile" class="job.portal.model.PDFFile" />
+   <bean id="fileDAO" class="job.portal.dao.FileDAO" />
+   <bean id="userService" class="job.portal.service.UserServiceImpl" />
+   <bean id="userDao" class="job.portal.dao.UserDaoImpl" />
+   
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource" ref="datasource" />
+  </bean>
+
+  <bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://localhost:3306/jobportal" />
+    <property name="username" value="root" />
+    <property name="password" value="Dhruv817@2018" />
+  </bean>
+  
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/jsp/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+  
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+  
+  <!-- JavaMailSender Configuration -->
+<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="smtp.gmail.com" />
+    <property name="port" value="587" />
+    <property name="username" value="sivaranjaniaravindan88@gmail.com" />
+    <property name="password" value="xvrq onec gpci detj" />
+    <property name="javaMailProperties">
+        <props>
+            <prop key="mail.smtp.auth">true</prop>
+            <prop key="mail.smtp.starttls.enable">true</prop>
+        </props>
+    </property>
+</bean>
+
+<!-- Email Service Bean Configuration -->
+<bean id="emailService" class="job.portal.service.EmailService">
+    <property name="javaMailSender" ref="mailSender" />
+</bean>
+
+<!-- Registration Controller Bean Configuration -->
+<bean id="registrationController" class="job.portal.controller.RegistrationController">
+    
+    <property name="emailService" ref="emailService" />
+</bean>
+
+</beans>
